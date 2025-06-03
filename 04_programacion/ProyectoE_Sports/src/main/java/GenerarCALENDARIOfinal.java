@@ -199,7 +199,7 @@ public class GenerarCALENDARIOfinal {
             int jornadaDelDia = obtenerOJornadaDelDia(conn);
 
             String insertSQL = "INSERT INTO PARTIDO (PUNTUACION, FECHA, RESULTADO_EQUIPO1, RESULTADO_EQUIPO2, ID_JORNADA, ID_EQUIPO1, ID_EQUIPO2) " +
-                    "VALUES (?, NOW, ?, ?, ?, ?, ?)";
+                    "VALUES (?, NOW(), ?, ?, ?, ?, ?)";
 
             try (PreparedStatement stmt = conn.prepareStatement(insertSQL)) {
                 stmt.setInt(1, Math.abs(g1 - g2));
@@ -276,7 +276,7 @@ public class GenerarCALENDARIOfinal {
     }
 
     private int obtenerOJornadaDelDia(Connection conn) throws SQLException {
-        String selectSQL = "SELECT ID_JORNADA FROM JORNADA WHERE TRUNC(FECHA) = TRUNC(SYSDATE)";
+        String selectSQL = "SELECT ID_JORNADA FROM JORNADA WHERE TRUNC(FECHA) = CURDATE()";
 
 
         PreparedStatement stmt = conn.prepareStatement(selectSQL);
@@ -290,7 +290,7 @@ public class GenerarCALENDARIOfinal {
             e.getMessage();
         }
 
-        String insertSQL = "INSERT INTO JORNADA (FECHA) VALUES (SYSDATE)";
+        String insertSQL = "INSERT INTO JORNADA (FECHA) VALUES (NOW())";
         try (PreparedStatement insertStmt = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS)) {
             insertStmt.executeUpdate();
             try (ResultSet generatedKeys = insertStmt.getGeneratedKeys()) {
